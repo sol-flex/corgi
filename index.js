@@ -10,7 +10,8 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const mime = require('mime');
 const cors = require('cors');
 
-
+const app = express();
+app.use(cors());
 
 require('dotenv').config();
 
@@ -26,8 +27,6 @@ mongoose.connect(process.env.MONGODB_URL, {
     console.error('Error connecting to MongoDB:', error);
 });
 
-const app = express();
-app.use(cors());
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '/public'), { 
