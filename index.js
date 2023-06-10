@@ -8,6 +8,8 @@ const Conversation = require('./conversation');
 const axios = require('axios');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const mime = require('mime');
+const cors = require('cors');
+
 
 
 require('dotenv').config();
@@ -25,6 +27,7 @@ mongoose.connect(process.env.MONGODB_URL, {
 });
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '/public'), { 
