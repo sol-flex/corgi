@@ -224,6 +224,6 @@ app.get('/query', async (req, res) => {
 
 // helper function
 
-app.listen(5001, () => {
+app.listen(process.env.PORT || 5001, () => {
   console.log(`Listening on ${process.env.BASE_URL}`);
 });
