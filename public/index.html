@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CorgiAI</title>
+  <style>
+    /* Add your CSS styling here, inspired by your CorgiAI extension */
+    /* Example styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    #chrome-ext-button {
+      background-color:white;
+      text-decoration: none;
+      display: flex;
+      margin: auto;
+      width: fit-content;
+      justify-content: left;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px 8px 16px;
+      background-color: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      box-shadow: rgb(0 0 0 / 15%) 1px 2px 3px;
+      height: 40px;
+      font-size:16px;
+      color: #656565;
+    }
+
+
+    .welcome-screen-content {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: white;
+        color: black;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+        justify-content:space-between;
+        flex-direction:row;
+    }
+
+    .navbar-left {
+        display: flex;
+        flex-direction:row;
+        align-items:center;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .content {
+      flex-grow: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #fff;
+      border-right: 1px solid #ccc;
+      padding: 20px;
+      transition: width 0.3s;
+      text-align:center;
+      margin-top:70px;
+    }
+
+    #new-chat-btn, .chat-item-btn {
+        width:80%;
+        padding:6px;
+    }
+
+    .sidebar.expanded-sidebar {
+      width: 80%;
+    }
+
+    .chat-history {
+      margin-bottom: 10px;
+    }
+
+    .welcome-screen {
+        text-align:center;
+        align-items:center;
+    }
+
+    .main-chat {
+        width:85%;
+        background-color:white;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        margin-top:70px;
+        overflow-y: auto; /* Add this line */
+        }
+
+    .chat-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .chat-conversation {
+      flex-grow: 1;
+      background-color: #fff;
+      overflow-y: auto;
+      padding: 10px;
+      height:100px;
+    }
+
+    .super-prompt, .user-prompt {
+      margin-right: 18px;
+      border-radius: 8px;
+    }
+
+    .super-prompt {
+        background-color: rgba(247,247,248,1);
+        display: flex;
+        flex-direction: row;
+        padding: 1rem;
+    }
+
+    .user-prompt {
+        display: flex;
+        flex-direction: row;
+        padding: 1rem;       
+    }
+
+    .prettyprint {
+        padding:20px;
+    }
+
+    .prompt-text-container {
+        display:inline-block;
+        font-size:1rem; 
+        vertical-align: top; 
+        max-width:94%
+    }
+
+    .prompt-text {
+        display:inline-block;
+        margin-left: 5px; 
+        font-size:1rem; 
+        vertical-align: top; 
+        margin: 0 0 0 10px;
+    }
+
+    .user-message {
+      background-color: #def2e6;
+      padding: 5px 10px;
+      margin-bottom: 5px;
+    }
+
+    .assistant-message {
+      background-color: #eaeaea;
+      padding: 5px 10px;
+      margin-bottom: 5px;
+    }
+
+    .input-container {
+      display: flex;
+      align-items: flex-end;
+      margin-top: 10px;
+    }
+
+    .input-container input {
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .input-container button, #send-btn {
+      padding: 10px 20px;
+      background-color: #FFDE59;
+      color: black;
+      cursor: pointer;
+      margin-left: 10px;
+      height:100%
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ccc;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .payment-prompt {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .openai-api-prompt {
+        display: flex;
+        justify-content: center;
+    }
+
+    .openai-api-prompt input {
+        width: 600px; 
+        height: 40px; 
+        border: 1px solid #FFDE59;
+        box-shadow: 0 0 10px #FFDE59;
+    }
+
+    button {
+        background-color: #FFDE59;
+        margin-left:10px;
+        color: black;
+        border-radius: 4px;
+        padding: 8px 16px;
+        cursor: pointer;
+    }
+
+    .subscribe-button {
+        background: linear-gradient(30.91deg, #FFDE59 30.28%, rgb(236, 0, 127) 100.95%);
+        margin-left:10px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        cursor: pointer;
+        height: 50px;
+        width:300px;
+        font-size:20px;
+        font-weight:bold;
+    }
+
+    .subscribe-button-navbar {
+        background: linear-gradient(30.91deg, #FFDE59 30.28%, rgb(236, 0, 127) 100.95%);
+        margin-left:10px;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        cursor: pointer;
+        height: 40px;
+        width:120px;
+        font-size:16px;
+        font-weight:bold;
+        margin-right:20px;
+    }
+
+    .subscribe-button-container {
+        display: flex;
+        justify-content:center;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .content {
+        flex-direction: column;
+      }
+
+      .navbar {
+        justify-content: space-between;
+      }
+
+      .navbar .hamburger {
+        display: none;
+      }
+
+      .expanded-sidebar .sidebar {
+        display: block;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar .hamburger {
+        display: block;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+      }
+    }
+  </style>
+</head>
+<script src="https://kit.fontawesome.com/321a833f86.js" crossorigin="anonymous"></script>
+<body>
+  <div class="navbar">
+    <div class="navbar-left">
+        <img src="corgi.png" style="height: 50px; width:50px;">
+        <h1>CorgiAI</h1>
+    </div>
+    <div class="subscribe-button-container">
+        <a style="text-decoration:none" href="https://chrome.google.com/webstore/detail/corgiai/hnhmkbmhmmehhdhgpgficdfaopjkbado?hl=en&authuser=0" target="_blank">
+          <button id="chrome-ext-button">
+            <img src="./assets/chrome.png" alt="Extension Logo" width="20" height="20">
+            Install on Chrome
+          </button>
+        </a>
+        <a href="https://buy.stripe.com/fZe7u8fbGcrp63eeUU">
+            <button class="subscribe-button-navbar">Subscribe</button>
+        </a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="content">
+      <div class="sidebar">
+        <button id="new-chat-btn">Start New Chat</button>
+        <div class="chat-history">
+          <!-- <div class="chat-item-container"><button data-id="647d44eab883452402f9c98f" class="chat-item-btn" style="margin-top:10px">new chat here test</button></div> -->
+          <!-- Display prior chat histories here -->
+        </div>
+      </div>
+      <div class="main-chat">
+        <div class="chat-conversation" id="chat-conversation">
+            <div class="welcome-screen">
+                <img src="./assets/corgi.png" style="width: 200px; height: 200px">
+                <h1 style="font-size: 60px">Welcome to Corgi</h1>
+         
+            <!--    <div class="welcome-screen-content">
+                    <h4>Corgi is your writing assistant</h4>
+                    <h4>Corgi is your academic tutor</h4>
+                    <h4>Corgi is your translator</h4>
+                    <h4>Corgi is the only AI app you'll ever need</h4>
+                </div> -->
+            </div>
+            <div id="prompts">
+              <!--  <div class="super-prompt" style="margin-right: 18px; margin-bottom: 10px; border-radius: 8px;"><img style="display:inline-block" src="./assets/chatgpt_icon.png" height="17px" width="17px"></img><p class="prompt-text">Hello I'm Corgi, your in-browser assistant. Select some text on screen and ask your question, or just ask me anything..</p></div> -->
+              <!--<div class="payment-prompt">
+                  <div class="super-prompt" style="margin-right: 18px; margin-bottom: 10px; border-radius: 8px;">
+                    <img style="display:inline-block" src="./assets/chatgpt_icon.png" height="17px" width="17px">
+                    </img><p class="prompt-text">Oops, looks like you reached your limit. To continue using for free enter your OpenAI API key below, or subscribe to a pro plan.<br><br></p>
+                  </div> 
+                  <div class="subscribe-button-container">
+                    <a href="https://buy.stripe.com/test_9AQdRbdyV5Si0i44gh">
+                      <button class="subscribe-button">Subscribe</button>
+                    </a>
+                  </div>
+                  <p style="font-weight:bold; font-size: 20px; text-align:center">or</p>
+                  <div class="openai-api-prompt">
+                    <input type="text" placeholder="Enter your OpenAI API key">
+                    <button>Save</button>
+                  </div>
+              </div> -->
+            </div>
+        </div>
+        <div class="input-container">
+          <input type="text" id="user-input" placeholder="Type your query...">
+          <button id="send-btn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <link rel="stylesheet" type="text/css" href="./prettify.css">
+  <script type="text/javascript" src="./prettify.js"></script>
+  <script>
+
+const newChatBtn = document.getElementById("new-chat-btn")
+newChatBtn.addEventListener("click", (event) => {
+
+
+  try {
+  const endpoint = "http://localhost:5001/conversations/"
+    
+  fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+
+    },
+    body: JSON.stringify({
+      newChat: true,
+      role: "assistant",
+      content: "Hello! How can I assist you?"
+    })
+  })
+    .then(response => {console.log("response data from backend: ", response); return response.json()})
+    .then(responseData => {
+      console.log("response data parsed from backend: ", responseData)
+      console.log("response data: ", responseData);
+
+      if(responseData.error) { console.log("Error: ", responseData.error.message) }
+
+      const { conversationId, chatGPTResponse } = responseData;
+      const currentUrl = window.location.href;
+
+
+      if(conversationId) {
+
+      // Append the conversation ID as a query parameter
+      const newUrl = `http://localhost:5001/conversations/${conversationId}`;
+
+      window.location.href = newUrl;
+
+      }
+    })
+
+  } catch(err) {
+  console.log(err);
+  }
+});
+
+[...document.getElementsByClassName("chat-item-btn")].forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      const convoId = event.target.getAttribute("data-id")
+      console.log(convoId)
+
+      const url = `http://localhost:5001/conversations/${convoId}`
+
+      window.location.href = url;
+
+      })
+})
+    // helper
+function parseText(text) {
+
+    const splitText = text.split("```");
+
+    const container = document.createElement("div");
+    container.classList.add("prompt-text-container")
+
+    for(let i = 0; i < splitText.length; i++) {
+        if(i % 2 === 0) {
+            const p = document.createElement("p")
+            p.innerText = splitText[i];
+            p.classList.add("prompt-text")
+            container.appendChild(p)
+
+
+        } else {
+            const pre = document.createElement("pre")
+            pre.innerText = splitText[i]
+            pre.classList.add("prettyprint")  
+            container.appendChild(pre)                  
+        }
+    }
+
+    return container;
+}
+    // JavaScript code for handling user input and displaying chat conversation
+    const prompts = document.getElementById('prompts');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const sidebar = document.querySelector('.sidebar');
+    const hamburger = document.querySelector('.hamburger');
+
+    sendBtn.addEventListener('click', () => {
+
+      document.getElementsByClassName("welcome-screen")[0].style.display = "none";
+      
+      const userQuery = userInput.value;
+      if (userQuery) {
+
+        // clear user input
+        userInput.value = '';
+
+        // Display user's query in the chat conversation
+        const div = document.createElement("div");
+        div.classList.add("user-prompt")
+        const img = document.createElement("img");
+        img.setAttribute("src", "./assets/marko_icon.png")
+        img.setAttribute("height", "17px")
+        img.setAttribute("width", "17px")
+        const p = document.createElement("p");
+
+        p.innerText = userQuery;
+        p.classList.add("prompt-text")
+
+        div.appendChild(img)
+        div.appendChild(p)
+
+        prompts.appendChild(div);
+
+        const url = window.location.href;
+
+        // Create a URL object
+
+        let conversationId = null;
+
+        if(url.includes("conversations/")) {
+          const parts = url.split("/");
+          conversationId = parts[parts.indexOf("conversations") + 1]
+        }
+
+        let endpoint = null; 
+
+        if(conversationId) {
+          endpoint = `http://localhost:5001/conversations/${conversationId}`
+        } else {
+          endpoint = "http://localhost:5001/conversations/"
+        }
+
+        try {
+
+        fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+
+          },
+          body: JSON.stringify({
+            role: "user",
+            content: `${userQuery}`
+          })
+        })
+          .then(response => {console.log("response data from backend: ", response); return response.json()})
+          .then(responseData => {
+            console.log("response data parsed from backend: ", responseData)
+            console.log("response data: ", responseData);
+
+            if(responseData.error) { console.log("Error: ", responseData.error.message) }
+
+            const { conversationId, chatGPTResponse } = responseData;
+            const currentUrl = window.location.href;
+
+
+            if(conversationId) {
+
+            // Append the conversation ID as a query parameter
+            const newUrl = `${currentUrl}conversations/${conversationId}`;
+
+            // Redirect the page to the new URL
+
+            history.pushState(null, null, newUrl);
+            console.log(newUrl)
+
+            }
+
+
+            const div = document.createElement("div");
+            div.classList.add("super-prompt")
+            const img = document.createElement("img");
+            img.setAttribute("src", "/assets/chatgpt_icon.png")
+            img.setAttribute("height", "17px")
+            img.setAttribute("width", "17px")
+
+            const container = parseText(chatGPTResponse.choices[0].message.content)
+    
+            div.appendChild(img)
+            div.appendChild(container)
+    
+            const prompts = document.getElementById("prompts")
+    
+            prompts.appendChild(div);
+            
+            PR.prettyPrint();
+            setTimeout(PR.prettyPrint, 300);
+
+
+            console.log(responseData)
+          })
+
+      } catch(err) {
+        console.log(err);
+      }
+      }
+    });
+
+    function createUserMsg(content) {
+      const div = document.createElement("div");
+      div.classList.add("user-prompt")
+      const img = document.createElement("img");
+      img.setAttribute("src", "/assets/marko_icon.png")
+      img.setAttribute("height", "17px")
+      img.setAttribute("width", "17px")
+      const p = document.createElement("p");
+
+      p.innerText = content;
+      p.classList.add("prompt-text")
+
+      div.appendChild(img)
+      div.appendChild(p)
+
+      prompts.appendChild(div);
+
+    }
+
+    function createAssistantMsg(content) {
+      const div = document.createElement("div");
+      div.classList.add("super-prompt")
+      const img = document.createElement("img");
+      img.setAttribute("src", "/assets/chatgpt_icon.png")
+      img.setAttribute("height", "17px")
+      img.setAttribute("width", "17px")
+
+      const container = parseText(content)
+
+      div.appendChild(img)
+      div.appendChild(container)
+
+      const prompts = document.getElementById("prompts")
+
+      prompts.appendChild(div);
+      
+      PR.prettyPrint();
+      setTimeout(PR.prettyPrint, 300);
+    }
+
+  </script>
+</body>
+</html>
