@@ -367,13 +367,16 @@
   <script type="application/javascript" src="./prettify.js"></script>
   <script>
 
+  const PROD_BASE_URL = "https://git.heroku.com/corgi.git"  
+  const DEV_BASE_URL = "http://localhost:5001"
+
 
 const newChatBtn = document.getElementById("new-chat-btn")
 newChatBtn.addEventListener("click", (event) => {
 
 
   try {
-  const endpoint = "http://localhost:5001/conversations/"
+  const endpoint = `${PROD_BASE_URL}/conversations/`
     
   fetch(endpoint, {
     method: 'POST',
@@ -401,7 +404,7 @@ newChatBtn.addEventListener("click", (event) => {
       if(conversationId) {
 
       // Append the conversation ID as a query parameter
-      const newUrl = `http://localhost:5001/conversations/${conversationId}`;
+      const newUrl = `${PROD_BASE_URL}/conversations/${conversationId}`;
 
       window.location.href = newUrl;
 
@@ -450,7 +453,7 @@ window.addEventListener('load', function() {
       const convoId = event.target.getAttribute("data-id")
       console.log("Convo ID: ", convoId)
 
-      const url = `http://localhost:5001/conversations/${convoId}/data`
+      const url = `${PROD_BASE_URL}/conversations/${convoId}/data`
 
       fetch(url, {
                 method: 'GET',
@@ -549,9 +552,9 @@ function parseText(text) {
         let endpoint = null; 
 
         if(conversationId) {
-          endpoint = `http://localhost:5001/conversations/${conversationId}`
+          endpoint = `${PROD_BASE_URL}/conversations/${conversationId}`
         } else {
-          endpoint = "http://localhost:5001/conversations/"
+          endpoint = `${PROD_BASE_URL}/conversations/`
         }
 
         try {
