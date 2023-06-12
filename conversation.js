@@ -9,6 +9,7 @@ const conversationSchema = new mongoose.Schema({
       timestamp: { type: Date, default: Date.now },
     },
   ],
+  conversationHistory: { type: String, required: true }
 });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);

@@ -9,6 +9,31 @@ const axios = require('axios');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const mime = require('mime');
 const cors = require('cors');
+const { OpenAI } = require("langchain/llms/openai")
+const { ConversationSummaryMemory } = require("langchain/memory");
+const { LLMChain } = require("langchain/chains");
+const { PromptTemplate } = require("langchain/prompts");
+
+const model = new OpenAI({ openAIApiKey: process.env.OPENAI_API, temperature: 0.5 });
+
+const memory = new ConversationSummaryMemory({
+  memoryKey: "chat_history",
+  llm: new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY, modelName: "gpt-3.5-turbo", temperature: 0 }),
+});
+
+const prompt = PromptTemplate.fromTemplate(  
+
+   `The following is a friendly conversation between a human and an AI.
+    The AI is talkative and provides lots of specific details from its context. 
+    If the AI does not know the answer to a question, it truthfully says it does not know.
+
+    Current conversation:
+    {chat_history}
+    Human: {input}
+    AI:`
+
+  );
+
 
 const app = express();
 app.use(cors());
@@ -71,7 +96,7 @@ app.post('/conversations', async (req, res) => {
 
       let requestData = {
           model: "gpt-3.5-turbo",
-          messages: conversation.messages.map(({ role, content }) => ({ role, content })),
+          messages: conversation.messages.slice(-4).map(({ role, content }) => ({ role, content })),
           max_tokens: 1000,
           temperature: 0.5,
           n: 1
@@ -133,7 +158,7 @@ app.post('/conversations/:conversationId', async (req, res) => {
   
         let requestData = {
             model: "gpt-3.5-turbo",
-            messages: conversation.messages.map(({ role, content }) => ({ role, content })),
+            messages: conversation.messages.slice(-4).map(({ role, content }) => ({ role, content })),
             max_tokens: 1000,
             temperature: 0.5,
             n: 1
