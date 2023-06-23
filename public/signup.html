@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Express • TodoMVC</title>
+		<link rel="stylesheet" href="/css/login.css">
+	</head>
+	<body>
+		<section class="prompt">
+			<h3>Corgi</h3>
+			<h1>Sign up</h1>
+			<form action="/signup" method="post" id="signup-form">
+				<section>
+					<label for="email">Username</label>
+					<input id="email" name="email" type="text" autocomplete="email" required>
+				</section>
+				<section>
+					<label for="new-password">Password</label>
+					<input id="new-password" name="password" type="password" autocomplete="new-password" required>
+				</section>
+				<button type="submit" id="signup-button">Sign up</button>
+			</form>
+			<hr>
+			<p class="help">Already have an account? <a href="/login.html">Sign in</a></p>
+		</section>
+	</body>
+</html>
+<script>
+    const PROD_BASE_URL = "https://corgi-5b308f1b3384.herokuapp.com"
+    // const DEV_BASE_URL = "http://localhost:5001"
+    
+    // Get references to the form and button elements
+    const signupForm = document.getElementById('signup-form');
+    const signupButton = document.getElementById('signup-button');
+  
+    // Add event listener to the form's submit event
+    signupForm.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent the form from submitting normally
+  
+      // Get the email and password values
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('new-password').value;
+  
+      // Create an object with the email and password data
+      const userData = { email, password };
+  
+      // Send a POST request to the backend with the user data
+      fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      })
+        .then(async (response) => {
+            if (response.ok && response.redirected) {
+                console.log(response);
+                console.log(response.url)
+                window.location.href = PROD_BASE_URL;
+            } else {
+                const errorData = await response.json();
+                console.log('Login failed', errorData);
+                // Handle login error
+            }
+        })
+        .catch((error) => {
+          // Handle any errors that occurred during the request
+          console.error(error);
+        });
+    });
+  </script>

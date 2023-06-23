@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Express • TodoMVC</title>
+		<link rel="stylesheet" href="/css/login.css">
+	</head>
+	<body>
+		<section class="prompt">
+			<h3>Corgi</h3>
+			<h1>Sign in</h1>
+			<form action="/login/password" method="post">
+				<section>
+					<label for="email">Email</label>
+					<input id="email" name="email" type="text" autocomplete="email" required autofocus>
+				</section>
+				<section>
+					<label for="current-password">Password</label>
+					<input id="current-password" name="password" type="password" autocomplete="current-password" required>
+				</section>
+				<button type="submit">Sign in</button>
+			</form>
+			<hr>
+			<p class="help">Don't have an account? <a href="/signup.html">Sign up</a></p>
+		</section>
+	</body>
+</html>
+<script>
+const PROD_BASE_URL = "https://corgi-5b308f1b3384.herokuapp.com"
+// const DEV_BASE_URL = "http://localhost:5001"
+
+const loginForm = document.querySelector('form');
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('current-password').value;
+
+  const userData = { email, password }
+
+
+  try {
+    const response = await fetch('/login/password', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify(userData)
+    });
+
+    if (response.ok && response.redirected) {
+        console.log(response);
+        console.log(response.url)
+        window.location.href = PROD_BASE_URL;
+    } else {
+      const errorData = await response.json();
+      console.log('Login failed', errorData);
+      // Handle login error
+    }
+  } catch (error) {
+    console.error('Error occurred during login', error);
+    // Handle error
+  }
+});
+
+</script>

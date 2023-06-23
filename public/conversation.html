@@ -12,6 +12,14 @@
       padding: 0;
     }
 
+    .navbar-left > a {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        color:inherit;
+        text-decoration: none;
+    }
+
     #chrome-ext-button {
       background-color:white;
       text-decoration: none;
@@ -129,6 +137,8 @@
       overflow-y: auto;
       padding: 10px;
       height:100px;
+      width: 75%;
+      margin: 0 auto;
     }
 
     .super-prompt, .user-prompt {
@@ -184,6 +194,8 @@
       display: flex;
       align-items: flex-end;
       margin-top: 10px;
+      width: 75%;
+      margin: 0 auto;
     }
 
     .input-container input {
@@ -310,8 +322,10 @@
 <body>
   <div class="navbar">
     <div class="navbar-left">
-        <img src="/assets/corgi.png" style="height: 50px; width:50px;">
-        <h1>CorgiAI</h1>
+        <a href="/">
+          <img src="/assets/corgi.png" style="height: 50px; width:50px;">
+          <h1>CorgiAI</h1>
+        </a>
     </div>
     <div class="subscribe-button-container">
         <a style="text-decoration:none" href="https://chrome.google.com/webstore/detail/corgiai/hnhmkbmhmmehhdhgpgficdfaopjkbado?hl=en&authuser=0" target="_blank">
@@ -323,6 +337,9 @@
         <a href="https://buy.stripe.com/fZe7u8fbGcrp63eeUU">
             <button class="subscribe-button-navbar">Subscribe</button>
         </a>
+        <div class="sign-in-container">
+          <button id="log-in-button">Log In</button>
+        </div>
     </div>
   </div>
   <div class="container">
@@ -363,12 +380,12 @@
       </div>
     </div>
   </div>
-  <link rel="stylesheet" type="text/css" href="./prettify.css">
-  <script type="application/javascript" src="./prettify.js"></script>
+  <link rel="stylesheet" type="text/css" href="/prettify.css">
+  <script type="application/javascript" src="/prettify.js"></script>
   <script>
 
-  const PROD_BASE_URL = "https://corgi.herokuapp.com"
-  // const DEV_BASE_URL =  "https://corgi.herokuapp.com" "http://localhost:5001"
+  const PROD_BASE_URL = "https://corgi-5b308f1b3384.herokuapp.com"
+  // const DEV_BASE_URL =  "http://localhost:5001"
 
 
 const newChatBtn = document.getElementById("new-chat-btn")
