@@ -81,6 +81,11 @@
       font-weight: bold;
     }
 
+    #log-in-button {
+      margin-right: 40px;
+      height: 40px;
+    }
+
     .container {
       display: flex;
       flex-direction: column;
@@ -392,7 +397,7 @@
 
 
   const PROD_BASE_URL = "https://corgi-5b308f1b3384.herokuapp.com"
-  // const DEV_BASE_URL =  "http://localhost:5001"
+  // const PROD_BASE_URL =  "http://localhost:5008"
 
   window.addEventListener('DOMContentLoaded', function() {
   // Function to fetch past conversations from the /data endpoint
@@ -448,6 +453,27 @@
       });
 
 
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const signOutButton = document.getElementById('log-in-button');
+  signOutButton.addEventListener('click', () => {
+    fetch('/logout', {
+      method: 'POST',
+    })
+      .then(response => {
+        if (response.ok) {
+          // Sign-out successful, redirect to the desired page
+          window.location.href = '/'; // Redirect to the home page or any desired location
+        } else {
+          // Handle sign-out failure
+          console.error('Sign out failed');
+        }
+      })
+      .catch(error => {
+        console.error('Error during sign out:', error);
+      });
+  });
 });
 
 

@@ -267,7 +267,7 @@ app.post('/login/password', (req, res, next) => {
   console.log(req.user)
   if (req.user) {
     // User is already logged in
-    return res.redirect('http://localhost:5001/index.html');
+    return res.redirect(`${process.env.PROD_URL}/index.html`);
   }
 
   passport.authenticate('local', (err, user, info) => {
@@ -292,7 +292,7 @@ app.post('/login/password', (req, res, next) => {
         return next(err); // Forward the error to the error handler
       }
 
-      return res.redirect('http://localhost:5001/index_authenticated.html');
+      return res.redirect(`${process.env.PROD_URL}/index_authenticated.html`);
     });
   })(req, res, next);
 });
@@ -301,7 +301,7 @@ app.post('/login/password', (req, res, next) => {
 app.post('/signup', async (req, res, next) => {
   if (req.user) {
     // User is already logged in
-    return res.redirect('http://localhost:5001/index.html');
+    return res.redirect(`${process.env.PROD_URL}/index.html`);
   }
   const { email, password } = req.body;
 
@@ -331,7 +331,7 @@ app.post('/signup', async (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.redirect('http://localhost:5001/index_authenticated.html');
+      return res.redirect(`${process.env.PROD_URL}/index_authenticated.html`);
     });
   } catch (error) {
     return res.status(500).json({ error: error });
@@ -341,7 +341,7 @@ app.post('/signup', async (req, res, next) => {
 app.post('/logout', function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
-    res.redirect('http://localhost:5001/index.html');
+    res.redirect(`${process.env.PROD_URL}/index.html`);
   });
 });
 
@@ -400,6 +400,6 @@ const ensureAuthenticated = (req, res, next) => {
   res.redirect('/login');
 };
 
-app.listen(process.env.PORT || 5001, () => {
+app.listen(process.env.PORT || 5008, () => {
   console.log(`Listening on ${process.env.BASE_URL}`);
 });
